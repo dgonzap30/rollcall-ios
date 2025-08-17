@@ -46,6 +46,10 @@ final class MockRollRepository: RollRepositoryProtocol {
     var invokedFetchRollsForChefParameters: ChefID?
     var stubbedFetchRollsForChefResult: Result<[Roll], Error> = .success([])
 
+    var invokedSave = false
+    var invokedSaveParameters: Roll?
+    var stubbedSaveResult: Result<Roll, Error>?
+
     func fetchAllRolls() async throws -> [Roll] {
         self.invokedFetchAllRolls = true
         self.invokedFetchAllRollsCount += 1
@@ -121,6 +125,32 @@ final class MockRollRepository: RollRepositoryProtocol {
             return rolls
         case let .failure(error):
             throw error
+        }
+    }
+
+    func save(_ roll: Roll) async throws -> Roll {
+        self.invokedSave = true
+        self.invokedSaveParameters = roll
+
+        // If a stubbed result is provided, use it
+        if let result = stubbedSaveResult {
+            switch result {
+            case let .success(savedRoll):
+                return savedRoll
+            case let .failure(error):
+                throw error
+            }
+        }
+
+        // Otherwise, check if roll exists and update or create
+        if let index = mockRolls.firstIndex(where: { $0.id == roll.id }) {
+            // Update existing roll
+            self.mockRolls[index] = roll
+            return try await self.updateRoll(roll)
+        } else {
+            // Create new roll
+            self.mockRolls.append(roll)
+            return try await self.createRoll(roll)
         }
     }
 }

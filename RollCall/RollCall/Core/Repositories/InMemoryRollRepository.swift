@@ -69,10 +69,10 @@ public actor InMemoryRollRepository: RollRepositoryProtocol {
     public func save(_ roll: Roll) async throws -> Roll {
         if self.rolls[roll.id] != nil {
             // Roll exists, update it
-            return try await self.updateRoll(roll)
+            try await self.updateRoll(roll)
         } else {
             // Roll doesn't exist, create it
-            return try await self.createRoll(roll)
+            try await self.createRoll(roll)
         }
     }
 }

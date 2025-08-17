@@ -124,10 +124,10 @@ public final class CoreDataRollRepository: RollRepositoryProtocol {
         // Check if roll exists
         if try await self.fetchRoll(by: roll.id) != nil {
             // Roll exists, update it
-            return try await self.updateRoll(roll)
+            try await self.updateRoll(roll)
         } else {
             // Roll doesn't exist, create it
-            return try await self.createRoll(roll)
+            try await self.createRoll(roll)
         }
     }
 }
