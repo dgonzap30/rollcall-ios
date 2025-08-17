@@ -1,0 +1,145 @@
+{
+  "next_steps": [
+    {
+      "id": "RC-P0-029",
+      "title": "Fix missing waitForExpectations in MainTabViewModelTests",
+      "rationale": "Test has 4 expectations with fulfill() but no waitForExpectations causing infinite test timeout",
+      "deliverables": [
+        "MainTabViewModelTests.swift with proper waitForExpectations calls"
+      ],
+      "steps": [
+        "Open MainTabViewModelTests.swift",
+        "Add waitForExpectations(timeout: 1.0) after setting up expectations in test_onTabSelected_updatesSelectedTab",
+        "Add await fulfillment(of: [expectation], timeout: 1.0) in test_concurrentTabSelection_handledSafely",
+        "Verify tests run without timeout"
+      ],
+      "files": [
+        "RollCallTests/Features/Main/MainTabViewModelTests.swift"
+      ],
+      "signatures": [
+        "waitForExpectations(timeout: 1.0)",
+        "await fulfillment(of: [expectation], timeout: 1.0)"
+      ],
+      "tests": [
+        "RollCallTests/Features/Main/MainTabViewModelTests::test_onTabSelected_updatesSelectedTab",
+        "RollCallTests/Features/Main/MainTabViewModelTests::test_concurrentTabSelection_handledSafely"
+      ],
+      "acceptance": [
+        "MainTabViewModelTests runs without timeout",
+        "All tests in MainTabViewModelTests pass",
+        "xcodebuild test -only-testing:RollCallTests/MainTabViewModelTests completes in < 10 seconds"
+      ],
+      "dependencies": [],
+      "estimate": "S"
+    },
+    {
+      "id": "RC-P0-030",
+      "title": "Fix missing waitForExpectations in AppCoordinatorTests",
+      "rationale": "Test has expectations with fulfill() but no waitForExpectations causing infinite test timeout",
+      "deliverables": [
+        "AppCoordinatorTests.swift with proper waitForExpectations calls"
+      ],
+      "steps": [
+        "Open AppCoordinatorTests.swift",
+        "Find all tests with expectation() calls",
+        "Add waitForExpectations(timeout: 1.0) or await fulfillment() as appropriate",
+        "Verify tests run without timeout"
+      ],
+      "files": [
+        "RollCallTests/App/AppCoordinatorTests.swift"
+      ],
+      "signatures": [
+        "waitForExpectations(timeout: 1.0)",
+        "await fulfillment(of: [expectation], timeout: 1.0)"
+      ],
+      "tests": [
+        "RollCallTests/App/AppCoordinatorTests::*"
+      ],
+      "acceptance": [
+        "AppCoordinatorTests runs without timeout",
+        "All tests in AppCoordinatorTests pass",
+        "xcodebuild test -only-testing:RollCallTests/AppCoordinatorTests completes in < 10 seconds"
+      ],
+      "dependencies": [],
+      "estimate": "S"
+    },
+    {
+      "id": "RC-P0-031",
+      "title": "Verify full test suite execution and measure coverage",
+      "rationale": "After fixing expectation waits, need to verify all tests pass and establish coverage baseline for CI",
+      "deliverables": [
+        "Full test suite passing",
+        "Coverage report showing ≥60% coverage"
+      ],
+      "steps": [
+        "Run full test suite: xcodebuild test",
+        "Verify no timeouts or failures",
+        "Extract coverage metrics from xcresult",
+        "Document coverage percentage"
+      ],
+      "files": [],
+      "signatures": [],
+      "tests": [
+        "RollCallTests/**/*"
+      ],
+      "acceptance": [
+        "xcodebuild test completes within 120 seconds",
+        "All tests pass (0 failures)",
+        "Coverage ≥60% overall",
+        "No test timeouts"
+      ],
+      "dependencies": ["RC-P0-029", "RC-P0-030"],
+      "estimate": "S"
+    },
+    {
+      "id": "RC-P0-032",
+      "title": "Create CI metrics collection script",
+      "rationale": "Need automated CI metrics generation to drive future P0 iterations per contract",
+      "deliverables": [
+        "scripts/collect-metrics.sh that generates ci-metrics.json"
+      ],
+      "steps": [
+        "Create scripts/collect-metrics.sh",
+        "Parse xcodebuild output for build status",
+        "Parse test results for pass/fail counts",
+        "Extract coverage from xcresult using xcrun xccov",
+        "Run SwiftLint and capture violation count",
+        "Output ci-metrics.json per schema"
+      ],
+      "files": [
+        "scripts/collect-metrics.sh"
+      ],
+      "signatures": [
+        "#!/bin/bash",
+        "xcrun xccov view --report",
+        "swiftlint --reporter json"
+      ],
+      "tests": [],
+      "acceptance": [
+        "Script generates valid ci-metrics.json",
+        "JSON includes: build_main, build_tests, coverage_percent, swiftlint_remaining, test_failures",
+        "Script executable and runs in < 10 seconds"
+      ],
+      "dependencies": ["RC-P0-031"],
+      "estimate": "M"
+    }
+  ],
+  "definition_of_done": [
+    "All tests green; coverage ≥60% overall",
+    "SwiftFormat/SwiftLint clean; no force-unwraps outside tests",
+    "A11y labels present on any touched views; AA contrast holds",
+    "Sentry receives a forced test event if a new surface was touched",
+    "os_log added with privacy where new logic introduced"
+  ],
+  "verification_commands": [
+    "xcodebuild -scheme RollCall -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test",
+    "swiftformat --lint .",
+    "swiftlint"
+  ],
+  "assumptions": [
+    "waitForExpectations is the correct fix for XCTest expectation timeouts",
+    "Coverage target of 60% is achievable with current test suite",
+    "CI metrics script can use xcrun xccov for coverage extraction"
+  ],
+  "open_questions": []
+}

@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Swift: Build Debug",
+            "type": "shell",
+            "command": "swift",
+            "args": ["build"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$swiftc"]
+        },
+        {
+            "label": "Swift: Build Release",
+            "type": "shell",
+            "command": "swift",
+            "args": ["build", "-c", "release"],
+            "group": "build",
+            "problemMatcher": ["$swiftc"]
+        },
+        {
+            "label": "Swift: Run Tests",
+            "type": "shell",
+            "command": "swift",
+            "args": ["test"],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": ["$swiftc"]
+        },
+        {
+            "label": "Swift: Clean",
+            "type": "shell",
+            "command": "swift",
+            "args": ["package", "clean"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Open in Xcode",
+            "type": "shell",
+            "command": "open",
+            "args": ["Package.swift"],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "Run iOS Simulator",
+            "type": "shell",
+            "command": "open",
+            "args": ["-a", "Simulator"],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "never"
+            }
+        }
+    ]
+}

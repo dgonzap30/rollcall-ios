@@ -1,0 +1,41 @@
+# SwiftFormat configuration for RollCall
+# Prevents conflicts with SwiftLint and maintains code style consistency
+
+# Disable rules that conflict with SwiftLint
+--disable trailingCommas
+--disable fileHeader
+--disable wrapMultilineStatementBraces
+
+# Swift version
+--swiftversion 5.10
+
+# Indentation
+--indent 4
+--indentcase false
+--indentstrings false
+
+# Line breaks
+--linebreaks lf
+--maxwidth 120
+
+# Wrapping
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--funcattributes prev-line
+--typeattributes prev-line
+
+# Other formatting
+--elseposition same-line
+--guardelse same-line
+--emptybraces no-space
+--ranges no-space
+--xcodeindentation enabled
+--stripunusedargs closure-only
+--self insert
+--semicolons inline
+--shortoptionals always
+
+# Organize
+--organizetypes actor,class,struct,enum,extension
+--extensionacl on-declarations

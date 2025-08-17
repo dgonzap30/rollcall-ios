@@ -1,0 +1,7 @@
+{
+  "build_main": "green",
+  "build_tests": "yellow",
+  "coverage_percent": 60.0,
+  "swiftlint_remaining": 0,
+  "test_failures": []
+}

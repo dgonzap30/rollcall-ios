@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Tests",
+            "program": ".build/debug/RollCallPackageTests.xctest",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Swift: Build Debug"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:rollcall-dev}",
+            "name": "Debug RollCallApp",
+            "program": "${workspaceFolder:rollcall-dev}/.build/debug/RollCallApp",
+            "preLaunchTask": "swift: Build Debug RollCallApp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:rollcall-dev}",
+            "name": "Release RollCallApp",
+            "program": "${workspaceFolder:rollcall-dev}/.build/release/RollCallApp",
+            "preLaunchTask": "swift: Build Release RollCallApp"
+        }
+    ]
+}

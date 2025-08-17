@@ -1,0 +1,101 @@
+# SwiftFormat Configuration for RollCall
+# Following CLAUDE.md requirements
+
+# Format Options
+--swiftversion 5.10
+--indent 4
+--indentcase false
+--trimwhitespace always
+--linebreaks lf
+--semicolons never
+--commas always
+--maxwidth 120
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+
+# Rules
+--enable blankLinesAroundMark
+--enable blankLinesAtEndOfScope
+--enable blankLinesAtStartOfScope
+--enable blankLinesBetweenScopes
+--enable consecutiveBlankLines
+--enable consecutiveSpaces
+--enable duplicateImports
+--enable elseOnSameLine
+--enable emptyBraces
+--enable enumNamespaces
+--enable fileHeader
+--enable hoistPatternLet
+--enable indent
+--enable leadingDelimiters
+--enable linebreakAtEndOfFile
+--enable numberFormatting
+--enable preferKeyPath
+--enable redundantBackticks
+--enable redundantBreak
+--enable redundantExtensionACL
+--enable redundantFileprivate
+--enable redundantGet
+--enable redundantInit
+--enable redundantLet
+--enable redundantLetError
+--enable redundantNilInit
+--enable redundantObjc
+--enable redundantParens
+--enable redundantPattern
+--enable redundantRawValues
+--enable redundantReturn
+--enable redundantSelf
+--enable redundantType
+--enable redundantVoidReturnType
+--enable semicolons
+--enable sortedImports
+--enable spaceAroundBraces
+--enable spaceAroundBrackets
+--enable spaceAroundComments
+--enable spaceAroundGenerics
+--enable spaceAroundOperators
+--enable spaceAroundParens
+--enable spaceInsideBraces
+--enable spaceInsideBrackets
+--enable spaceInsideComments
+--enable spaceInsideGenerics
+--enable spaceInsideParens
+--enable strongOutlets
+--enable strongifiedSelf
+--enable todos
+--enable trailingClosures
+--enable trailingCommas
+--enable trailingSpace
+--enable typeSugar
+--enable unusedArguments
+--enable void
+--enable wrapArguments
+--enable wrapAttributes
+--enable wrapEnumCases
+--enable wrapMultilineStatementBraces
+--enable yodaConditions
+
+# Disable rules that conflict with our style
+--disable andOperator
+--disable anyObjectProtocol
+--disable assertionFailures
+--disable blankLinesBetweenImports
+--disable extensionAccessControl
+--disable markTypes
+--disable organizeDeclarations
+--disable redundantClosure
+--disable sortDeclarations
+--disable wrapConditionalBodies
+--disable wrapSwitchCases
+
+# Header template
+--header "//\n// {file}\n// RollCall\n//\n// Created by {author} on {created}.\n//"
+
+# Exclude paths
+--exclude .build
+--exclude DerivedData
+--exclude Pods
+--exclude Carthage
+--exclude .swiftpm
