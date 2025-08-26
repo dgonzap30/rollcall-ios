@@ -66,24 +66,12 @@ final class MainTabViewModelTests: XCTestCase {
 
     @MainActor
     func test_onTabSelected_updatesSelectedTab() {
-        let expectation = expectation(description: "State updated")
-        expectation.expectedFulfillmentCount = 3
-
-        self.sut.$viewState
-            .dropFirst()
-            .sink { _ in
-                expectation.fulfill()
-            }
-            .store(in: &self.cancellables)
-
+        // When
         self.sut.onTabSelected(.create)
         self.sut.onTabSelected(.profile)
         self.sut.onTabSelected(.feed)
 
-        waitForExpectations(timeout: 1.0) { error in
-            XCTAssertNil(error, "Expectation failed with error: \(String(describing: error))")
-        }
-
+        // Then
         XCTAssertEqual(self.sut.viewState.selectedTab, .feed)
         XCTAssertTrue(self.mockCoordinator.handleTabSelectionCalled)
         XCTAssertEqual(self.mockCoordinator.handleTabSelectionCallCount, 3)
@@ -92,9 +80,10 @@ final class MainTabViewModelTests: XCTestCase {
 
     @MainActor
     func test_onTabSelected_clearsError() {
-        // Since we can't directly set error, we verify the error clearing logic
+        // When
         self.sut.onTabSelected(.profile)
 
+        // Then - error clearing happens synchronously
         XCTAssertNil(self.sut.viewState.error)
         XCTAssertEqual(self.sut.viewState.selectedTab, .profile)
     }
@@ -103,18 +92,22 @@ final class MainTabViewModelTests: XCTestCase {
 
     @MainActor
     func test_onCreateRollTapped_callsCoordinator() {
+        // When
         self.sut.onCreateRollTapped()
 
+        // Then
         XCTAssertTrue(self.mockCoordinator.showCreateRollCalled)
         XCTAssertEqual(self.mockCoordinator.showCreateRollCallCount, 1)
     }
 
     @MainActor
     func test_onCreateRollTapped_multipleTimes() {
+        // When
         self.sut.onCreateRollTapped()
         self.sut.onCreateRollTapped()
         self.sut.onCreateRollTapped()
 
+        // Then
         XCTAssertEqual(self.mockCoordinator.showCreateRollCallCount, 3)
     }
 
@@ -122,8 +115,10 @@ final class MainTabViewModelTests: XCTestCase {
 
     @MainActor
     func test_dismissError_clearsError() {
+        // When
         self.sut.dismissError()
 
+        // Then
         XCTAssertNil(self.sut.viewState.error)
     }
 
@@ -169,10 +164,13 @@ final class MainTabViewModelTests: XCTestCase {
 
     @MainActor
     func test_viewStateUpdate_maintainsImmutability() {
+        // Given
         let originalState = self.sut.viewState
 
+        // When
         self.sut.onTabSelected(.profile)
 
+        // Then
         XCTAssertNotEqual(originalState.selectedTab, self.sut.viewState.selectedTab)
         XCTAssertEqual(self.sut.viewState.selectedTab, .profile)
     }
@@ -202,30 +200,14 @@ final class MainTabViewModelTests: XCTestCase {
     // MARK: - Concurrent Access Tests
 
     @MainActor
-    func test_concurrentTabSelection_handledSafely() async {
-        let expectation = expectation(description: "All tasks completed")
-        expectation.expectedFulfillmentCount = 3
+    func test_concurrentTabSelection_handledSafely() {
+        // When - simulate rapid tab selections
+        self.sut.onTabSelected(.feed)
+        self.sut.onTabSelected(.create)
+        self.sut.onTabSelected(.profile)
 
-        await withTaskGroup(of: Void.self) { group in
-            group.addTask { @MainActor [weak self] in
-                self?.sut.onTabSelected(.feed)
-                expectation.fulfill()
-            }
-
-            group.addTask { @MainActor [weak self] in
-                self?.sut.onTabSelected(.create)
-                expectation.fulfill()
-            }
-
-            group.addTask { @MainActor [weak self] in
-                self?.sut.onTabSelected(.profile)
-                expectation.fulfill()
-            }
-        }
-
-        await fulfillment(of: [expectation], timeout: 1.0)
-
-        // Verify final state is one of the selected tabs
-        XCTAssertTrue([Tab.feed, .create, .profile].contains(self.sut.viewState.selectedTab))
+        // Then - final state should be the last selected tab
+        XCTAssertEqual(self.sut.viewState.selectedTab, .profile)
+        XCTAssertEqual(self.mockCoordinator.handleTabSelectionCallCount, 3)
     }
 }

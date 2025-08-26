@@ -72,8 +72,10 @@ public final class AppCoordinator: ObservableObject {
             coordinator.delegate = self
             self.onboardingCoordinator = coordinator
         }
-        // Safe force unwrap: coordinator guaranteed to exist after above check
-        return AnyView(self.onboardingCoordinator!.start())
+        guard let coordinator = self.onboardingCoordinator else {
+            fatalError("Onboarding coordinator should be initialized")
+        }
+        return AnyView(coordinator.start())
     }
 
     @MainActor
@@ -83,8 +85,10 @@ public final class AppCoordinator: ObservableObject {
             coordinator.delegate = self
             self.mainTabCoordinator = coordinator
         }
-        // Safe force unwrap: coordinator guaranteed to exist after above check
-        return AnyView(self.mainTabCoordinator!.start())
+        guard let coordinator = self.mainTabCoordinator else {
+            fatalError("Main tab coordinator should be initialized")
+        }
+        return AnyView(coordinator.start())
     }
 
     // MARK: - Private Methods

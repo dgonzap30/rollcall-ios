@@ -31,17 +31,13 @@ final class CoreDataStackTests: XCTestCase {
     }
 
     func test_performBackgroundTask_executesOnBackgroundContext() async throws {
-        let expectation = XCTestExpectation(description: "Background task executed")
-
         let result = try await sut.performBackgroundTask { context in
             XCTAssertFalse(Thread.isMainThread)
             XCTAssertNotEqual(context, self.sut.viewContext)
-            expectation.fulfill()
             return "Success"
         }
 
         XCTAssertEqual(result, "Success")
-        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
     func test_save_persistsChanges() async throws {

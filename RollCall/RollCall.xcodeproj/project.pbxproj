@@ -33,7 +33,6 @@
 		A70754E12E4D6A830033A777 /* Exceptions for "RollCall" folder in "RollCall" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist.backup,
 				Resources/Info.plist,
 			);
 			target = A7B6DB3C2E24A06300C3DCFB /* RollCall */;
